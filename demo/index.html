@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <title>Gettext.js Demo</title>
+        <meta charset="utf-8">
+        <script src="locale/en/LC_MESSAGES/messages.mo.js"></script>
+        <script src="locale/ja/LC_MESSAGES/messages.mo.js"></script>
+        <script src="../src/js/gettext-compiled.js"></script>
+    </head>
+    <body>
+        <h1>Gettext.js Demo</h1>
+        <p>
+            <button locale="en">English</button>
+            <button locale="ja">日本語</button>
+            <button locale="null">Reset</button>
+        </p>
+        <p>
+            <span msgid="simple-string"></span>
+        </p>
+        <p>
+            <span msgid="singular-string" msgid-plural="plural-string" count="1"></span>
+        </p>
+        <p>
+            <span msgid="singular-string" msgid-plural="plural-string" count="2"></span>
+        </p>
+        <script>
+            (function(){
+                var langs = {
+                    'en': new Gettext(EN_MESSAGES),
+                    'ja': new Gettext(JA_MESSAGES),
+                    'null': new Gettext()
+                };
+                var lang = langs['null'];
+                var each = function(arr, func){
+                    for (var i = 0, l = arr.length; i < l; i++){
+                        func(arr[i]);
+                    }
+                }
+                each(document.querySelectorAll('[locale]'), function(ele){
+                    ele.addEventListener('click', function(){
+                        lang = langs[event.target.getAttribute('locale')];
+                        refresh();
+                    })
+                });
+                function refresh(){
+                    each(document.querySelectorAll('[msgid]'), function(ele){
+                        var singular = ele.getAttribute('msgid'),
+                            plural = ele.getAttribute('msgid-plural'),
+                            count = ele.getAttribute('count');
+                        if (!plural){
+                            ele.textContent = lang.gettext(singular);
+                        } else {
+                            ele.textContent = lang.ngettext(singular, plural, parseInt(count, 10));
+                        }
+                    });
+                }
+                refresh();
+            })();
+        </script>
+    </body>
+</html>
