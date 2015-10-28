@@ -5,8 +5,10 @@ import os
 import docopt
 import pkg_resources
 
-
-VERSION = pkg_resources.get_distribution('gettextjs').version
+try:
+    VERSION = pkg_resources.get_distribution('gettextjs').version
+except pkg_resources.DistributionNotFound:
+    VERSION = 'dev'
 USAGE = """gettextjs
 
 Usage:
@@ -66,6 +68,8 @@ def compile_domain(locale_path: str, locale: str, domain: str, out_dir: str,
                    mode: int, indent: int, verbose: bool):
     data = compile_to_dict(locale_path, locale, domain)
     lc_messages = os.path.join(out_dir, locale, 'LC_MESSAGES')
+    if not os.path.exists(lc_messages):
+        os.makedirs(lc_messages)
     if mode == JSON_MODE:
         out_file = os.path.join(
             lc_messages,
@@ -115,8 +119,8 @@ def compile_locale_path(locale_path: str, out_dir: str, mode: int, indent: int,
                         )
 
 
-def cli():
-    args = docopt.docopt(USAGE, version=VERSION)
+def cli(argv=None):
+    args = docopt.docopt(USAGE, version=VERSION, argv=argv)
     mode = 1 if args['--js'] else 0
     out_dir = args.get('<out-dir>', None) or args['<locale-path>']
     compile_locale_path(
