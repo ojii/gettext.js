@@ -15,7 +15,6 @@ files in your browser.
 You don't need to use Python in your project, the only thing you need at
 runtime is Javascript.
 
-Contents:
 
 .. toctree::
     :maxdepth: 2

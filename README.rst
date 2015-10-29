@@ -14,6 +14,7 @@ directly from Javascript in your browser.
 
 Demo: https://cdn.rawgit.com/ojii/gettext.js/master/demo/index.html
 
+Docs: http://gettextjs.readthedocs.org/
 
 Usage
 =====
@@ -43,7 +44,7 @@ Async from JSON
 .. code-block::
 
     Gettext.load('/base/url/to/locale', 'en', 'messages').then(function(gettext){
-        var msgstr= gettext.gettext('msgid');
+        var msgstr = gettext.gettext('msgid');
     });
 
 Sync from JS
