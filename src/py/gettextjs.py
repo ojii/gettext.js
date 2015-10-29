@@ -76,7 +76,7 @@ def compile_domain(locale_path: str, locale: str, domain: str, out_dir: str,
             '{domain}.mo.json'.format(domain=domain)
         )
         with open(out_file, 'w') as fobj:
-            json.dump(data, fobj, indent=indent)
+            json.dump(data, fobj, indent=indent, sort_keys=True)
     elif mode == JS_MODE:
         out_file = os.path.join(
             lc_messages,
@@ -88,7 +88,7 @@ def compile_domain(locale_path: str, locale: str, domain: str, out_dir: str,
             fobj.write('_')
             fobj.write(domain.upper())
             fobj.write(' = ')
-            json.dump(data, fobj, indent=indent)
+            json.dump(data, fobj, indent=indent, sort_keys=True)
             fobj.write(';')
     else:
         raise ValueError("Unkown mode: {mode}".format(mode=mode))
