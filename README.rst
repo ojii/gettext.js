@@ -8,6 +8,8 @@ gettext.js
 GNU gettext in Javascript. Compile your mo files to JSON/JS and then use them
 directly from Javascript in your browser.
 
+Demo: https://cdn.rawgit.com/ojii/gettext.js/master/demo/index.html
+
 
 Usage
 =====
