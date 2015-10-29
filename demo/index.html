@@ -37,7 +37,7 @@
                     }
                 }
                 each(document.querySelectorAll('[locale]'), function(ele){
-                    ele.addEventListener('click', function(){
+                    ele.addEventListener('click', function(event){
                         lang = langs[event.target.getAttribute('locale')];
                         refresh();
                     })
