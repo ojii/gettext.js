@@ -1,6 +1,10 @@
 .. image:: https://travis-ci.org/ojii/gettext.js.svg?branch=master
     :target: https://travis-ci.org/ojii/gettext.js
 
+.. image:: https://readthedocs.org/projects/gettextjs/badge/?version=latest
+    :target: http://gettextjs.readthedocs.org/en/latest/?badge=latest
+    :alt: Documentation Status
+
 gettext.js
 ##########
 
