@@ -10,9 +10,9 @@
     <body>
         <h1>Gettext.js Demo</h1>
         <p>
-            <button locale="en">English</button>
-            <button locale="ja">日本語</button>
-            <button locale="null">Reset</button>
+            <input id="en" type="radio" name="locale" value="en"><label for="en">English</label>
+            <input id="ja" type="radio" name="locale" value="ja"><label for="ja">日本語</label>
+            <input id="null" type="radio" name="locale" value="null" checked><label for="null">Reset</label>
         </p>
         <p>
             <span msgid="simple-string"></span>
@@ -22,6 +22,9 @@
         </p>
         <p>
             <span msgid="singular-string" msgid-plural="plural-string" count="2"></span>
+        </p>
+        <p>
+            <a href="https://github.com/ojii/gettext.js/blob/master/demo/index.html">Source</a>
         </p>
         <script>
             (function(){
@@ -36,9 +39,9 @@
                         func(arr[i]);
                     }
                 }
-                each(document.querySelectorAll('[locale]'), function(ele){
-                    ele.addEventListener('click', function(event){
-                        lang = langs[event.target.getAttribute('locale')];
+                each(document.querySelectorAll('input[name=locale]'), function(ele){
+                    ele.addEventListener('change', function(event){
+                        lang = langs[event.target.getAttribute('value')];
                         refresh();
                     })
                 });
