@@ -1,10 +1,11 @@
-from contextlib import contextmanager
+import io
 import json
 import os
+import shutil
+import subprocess
 import tempfile
 import unittest
-import shutil
-import io
+from contextlib import contextmanager
 
 from flask import Flask
 from nose.tools import nottest
@@ -17,7 +18,6 @@ from viceroy.contrib.flask import ViceroyFlaskTestCase
 from viceroy.contrib.qunit import QUnitScanner
 
 import gettextjs
-
 
 
 class FixedQUnitScanner(QUnitScanner):
@@ -205,6 +205,21 @@ class CodeQualityTests(unittest.TestCase):
         reporter = Reporter(out, out)
         errors = sum(map(lambda f: api.checkPath(f, reporter), files))
         self.assertEqual(errors, 0, '\n' + out.getvalue())
+
+    @unittest.skipIf(not shutil.which('jshint'), "jshint not installed")
+    def test_jshint(self):
+        filename = os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            'js',
+            'gettext.js'
+        )
+        process = subprocess.Popen(
+            ['jshint', filename],
+            stderr=subprocess.PIPE,
+        )
+        _, stderr = process.communicate(timeout=5)
+        self.assertEqual(process.returncode, 0, stderr)
 
 
 class JSTestsBase(ViceroyFlaskTestCase):

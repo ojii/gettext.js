@@ -1,4 +1,5 @@
-"use strict"
+/*jshint strict:true, latedef:true, noempty:true, noarg:true, unused:vars, evil:true, esnext:true, indent:4, eqeqeq:true, nocomma:true, quotmark:single, nonbsp:true, browser:true, bitwise:true, curly:true, undef:true, globalstrict:true, nonew:true, forin:true */
+'use strict';
 
 class Gettext {
     constructor(catalog) {
