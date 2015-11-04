@@ -9,6 +9,7 @@ try:
     VERSION = pkg_resources.get_distribution('gettextjs').version
 except pkg_resources.DistributionNotFound:
     VERSION = 'dev'
+
 USAGE = """gettextjs
 
 Usage:

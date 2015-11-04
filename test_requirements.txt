@@ -3,3 +3,4 @@ flask-testing
 viceroy
 docopt
 nose
+pyflakes

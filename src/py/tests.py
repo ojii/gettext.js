@@ -4,14 +4,20 @@ import os
 import tempfile
 import unittest
 import shutil
+import io
+
 from flask import Flask
-import gettextjs
 from nose.tools import nottest
+from pyflakes import api
+from pyflakes.reporter import Reporter
 from slimit import ast
 from viceroy.api import build_test_case
-from viceroy.constants import VICEROY_JS_PATH, VICEROY_STATIC_ROOT
+from viceroy.constants import VICEROY_STATIC_ROOT
 from viceroy.contrib.flask import ViceroyFlaskTestCase
 from viceroy.contrib.qunit import QUnitScanner
+
+import gettextjs
+
 
 
 class FixedQUnitScanner(QUnitScanner):
@@ -187,6 +193,18 @@ class IntegrationTests(unittest.TestCase):
                 'simple-string': '簡単なストリング',
                 'singular-string': '日本語には複数形がありません。'
             })
+
+
+class CodeQualityTests(unittest.TestCase):
+    def test_pyflakes(self):
+        files = map(
+            lambda name: os.path.join(os.path.dirname(__file__), name),
+            ['gettextjs.py', 'tests.py']
+        )
+        out = io.StringIO()
+        reporter = Reporter(out, out)
+        errors = sum(map(lambda f: api.checkPath(f, reporter), files))
+        self.assertEqual(errors, 0, '\n' + out.getvalue())
 
 
 class JSTestsBase(ViceroyFlaskTestCase):
