@@ -101,8 +101,8 @@ def compile_domain(locale_path: str, locale: str, domain: str, out_dir: str,
         ))
 
 
-def compile_locale_path(locale_path: str, out_dir: str, mode: int, indent: int,
-                        verbose: bool):
+def compile_locale_path(locale_path: str, out_dir: str, mode=JSON_MODE,
+                        indent=0, verbose=False):
     for entry in os.scandir(locale_path):
         if entry.is_dir():
             lc_messages = os.path.join(entry.path, 'LC_MESSAGES')

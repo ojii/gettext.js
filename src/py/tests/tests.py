@@ -20,6 +20,39 @@ from viceroy.contrib.qunit import QUnitScanner
 import gettextjs
 
 
+GETTEXT_PY_FILE = os.path.abspath(gettextjs.__file__)
+BASE_DIR = os.path.dirname(GETTEXT_PY_FILE)
+JSHINT_RC = os.path.join(
+    BASE_DIR,
+    '..',
+    '..',
+    '.jshintrc'
+)
+GETTEXT_JS_FILE = os.path.join(
+    BASE_DIR,
+    '..',
+    'js',
+    'gettext.js',
+)
+GETTEXT_JS_COMPILED_FILE = os.path.join(
+    BASE_DIR,
+    '..',
+    'js',
+    'gettext-compiled.js',
+)
+THIS_FILE = os.path.abspath(__file__)
+THIS_DIR = os.path.dirname(THIS_FILE)
+TESTS_JS_FILE = os.path.join(THIS_DIR, 'tests.js')
+TESTDATA_DIR = os.path.join(
+    THIS_DIR,
+    'data',
+)
+LOCALE_PATH = os.path.join(
+    TESTDATA_DIR,
+    'locale',
+)
+
+
 class FixedQUnitScanner(QUnitScanner):
     def visit_FunctionCall(self, node):
         if isinstance(node.identifier, ast.DotAccessor):
@@ -27,31 +60,6 @@ class FixedQUnitScanner(QUnitScanner):
                 if node.identifier.node.value == 'QUnit':
                     if node.identifier.identifier.value in ['test', 'asyncTest']:
                         yield self.extract_name(node.args[0])
-
-
-LOCALE_PATH = os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__),
-        '..',
-        '..',
-        'demo',
-        'locale',
-    )
-)
-GETTEXT_JS_FILE = os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__),
-        '..',
-        'js',
-        'gettext-compiled.js',
-    )
-)
-TESTDATA_DIR = os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__),
-        'testdata',
-    )
-)
 
 
 @contextmanager
@@ -72,27 +80,33 @@ def index():
     <head>
         <script src='/gettext.js'></script>
         <script src='/viceroy/viceroy.js'></script>
+        <script src='/data/qunit.js'></script>
+        <script src='/viceroy/qunit-bridge.js'></script>
         <script src='/locale/en/LC_MESSAGES/messages.mo.js'></script>
         <script src='/locale/ja/LC_MESSAGES/messages.mo.js'></script>
-        <link rel='stylesheet' href='/test/qunit.css'>
+        <link rel='stylesheet' href='/data/qunit.css'>
     </head>
     <body>
         <div id='qunit'></div>
         <div id='qunit-fixture'></div>
-        <script src='/test/qunit.js'></script>
-        <script src='/viceroy/qunit-bridge.js'></script>
-        <script src='/test/tests.js'></script>
+        <script src='/tests.js'></script>
     </body>
 </html>"""
 
 
 @app.route('/gettext.js')
 def static_gettext():
-    with open(GETTEXT_JS_FILE) as fobj:
+    with open(GETTEXT_JS_COMPILED_FILE) as fobj:
         return fobj.read()
 
 
-@app.route('/test/<filename>')
+@app.route('/tests.js')
+def static_tests():
+    with open(TESTS_JS_FILE) as fobj:
+        return fobj.read()
+
+
+@app.route('/data/<filename>')
 def static_data(filename):
     with open(os.path.join(TESTDATA_DIR, filename)) as fobj:
         return fobj.read()
@@ -106,8 +120,9 @@ def static_viceroy(filename):
 
 @app.route('/locale/<locale>/LC_MESSAGES/<filename>')
 def message_catalog(locale, filename):
-    with open(os.path.join(LOCALE_PATH, locale, 'LC_MESSAGES', filename)) as f:
-        return f.read()
+    path = os.path.join(app.locale_dir, locale, 'LC_MESSAGES', filename)
+    with open(path) as fobj:
+        return fobj.read()
 
 
 class IntegrationTests(unittest.TestCase):
@@ -197,10 +212,10 @@ class IntegrationTests(unittest.TestCase):
 
 class CodeQualityTests(unittest.TestCase):
     def test_pyflakes(self):
-        files = map(
-            lambda name: os.path.join(os.path.dirname(__file__), name),
-            ['gettextjs.py', 'tests.py']
-        )
+        files = [
+            GETTEXT_PY_FILE,
+            THIS_FILE,
+        ]
         out = io.StringIO()
         reporter = Reporter(out, out)
         errors = sum(map(lambda f: api.checkPath(f, reporter), files))
@@ -208,27 +223,46 @@ class CodeQualityTests(unittest.TestCase):
 
     @unittest.skipIf(not shutil.which('jshint'), "jshint not installed")
     def test_jshint(self):
-        filename = os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            'js',
-            'gettext.js'
-        )
+        files = [
+            GETTEXT_JS_FILE,
+            TESTS_JS_FILE
+        ]
         process = subprocess.Popen(
-            ['jshint', filename],
-            stderr=subprocess.PIPE,
+            ['jshint', '-c', JSHINT_RC] + files,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
         )
-        _, stderr = process.communicate(timeout=5)
-        self.assertEqual(process.returncode, 0, stderr)
+        messages, _ = process.communicate(timeout=5)
+        self.assertEqual(process.returncode, 0, '\n' + messages.decode('utf-8'))
 
 
 class JSTestsBase(ViceroyFlaskTestCase):
     viceroy_flask_app = app
 
+    @classmethod
+    def setUpClass(cls):
+        app.locale_dir = tempfile.mkdtemp()
+        gettextjs.compile_locale_path(
+            LOCALE_PATH,
+            app.locale_dir,
+            gettextjs.JS_MODE
+        )
+        gettextjs.compile_locale_path(
+            LOCALE_PATH,
+            app.locale_dir,
+            gettextjs.JSON_MODE
+        )
+        super().setUpClass()
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(app.locale_dir)
+        super().tearDownClass()
+
 
 JSTests = nottest(build_test_case)(
     'ViceroySuccessTests',
-    os.path.join(TESTDATA_DIR, 'tests.js'),
+    TESTS_JS_FILE,
     FixedQUnitScanner,
     JSTestsBase
 )

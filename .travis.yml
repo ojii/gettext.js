@@ -10,3 +10,4 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
   - "nvm install stable"
 script: nosetests src/py/tests.py
+cache: pip
