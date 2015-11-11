@@ -7,7 +7,6 @@ Dependencies
 Compiler
 --------
 
-* `GNU gettext`_
 * `Python 3.5`_ or higher
 * `docopt`_ (installed automatically)
 
@@ -28,7 +27,8 @@ Compiler
 Javascript runtime
 ------------------
 
-Grab ``gettext-compiled.js`` and include it in your page.
+Grab ``dist/gettext.js`` or ``dist/gettext.min.js`` from the repo and include it
+in your page.
 
 .. _GNU gettext: https://www.gnu.org/software/gettext/
 .. _Python 3.5: https://www.python.org/downloads/release/python-350/

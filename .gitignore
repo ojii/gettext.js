@@ -3,3 +3,4 @@ env
 .idea
 *.egg-info
 docs/_build/
+node_modules/
