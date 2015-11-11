@@ -37,8 +37,9 @@ GETTEXT_JS_FILE = os.path.join(
 GETTEXT_JS_COMPILED_FILE = os.path.join(
     BASE_DIR,
     '..',
-    'js',
-    'gettext-compiled.js',
+    '..',
+    'dist',
+    'gettext.js',
 )
 THIS_FILE = os.path.abspath(__file__)
 THIS_DIR = os.path.dirname(THIS_FILE)
