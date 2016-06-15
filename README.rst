@@ -2,7 +2,7 @@
     :target: https://travis-ci.org/ojii/gettext.js
 
 .. image:: https://readthedocs.org/projects/gettextjs/badge/?version=latest
-    :target: http://gettextjs.readthedocs.org/en/latest/?badge=latest
+    :target: https://gettextjs.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
 gettext.js
@@ -14,7 +14,7 @@ directly from Javascript in your browser.
 
 Demo: https://cdn.rawgit.com/ojii/gettext.js/master/demo/index.html
 
-Docs: http://gettextjs.readthedocs.org/
+Docs: https://gettextjs.readthedocs.io/
 
 Usage
 =====
