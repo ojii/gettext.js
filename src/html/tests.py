@@ -16,11 +16,11 @@ from flask import render_template
 from flask import send_from_directory
 from selenium import webdriver
 
-import gettextjs
 
 THIS_DIR = os.path.join(os.path.dirname(__file__))
 DIST_FOLDER = os.path.abspath(os.path.join(THIS_DIR, '..', '..', 'dist'))
 TEST_DATA_DIR = os.path.abspath(os.path.join(THIS_DIR, '..', 'test_data'))
+GETTEXTJS_PY = os.path.join(THIS_DIR, '..', 'py', 'gettextjs.py')
 
 LOCALES = {
     'null': gettext.NullTranslations(),
@@ -128,7 +128,7 @@ class LiveServerTestCase(unittest.TestCase):
             old = app.locale_dir
             try:
                 app.locale_dir = workspace
-                command = [sys.executable, gettextjs.__file__]
+                command = [sys.executable, GETTEXTJS_PY]
                 if json:
                     command.append('--json')
                 command.append(TEST_DATA_DIR)
