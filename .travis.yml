@@ -10,8 +10,12 @@ install:
 before_script:
   - "gulp build"
 env:
-  - SCRIPT="gulp test"
-  - SCRIPT="python src/py/tests.py"
-  - SCRIPT="SELENIUM_WEBDRIVER=PhantomJS SELENIUM_DEBUG=1 python src/html/tests.py"
+  global:
+    - SELENIUM_WEBDRIVER=PhantomJS
+    - SELENIUM_DEBUG=1
+  matrix:
+    - SCRIPT="gulp test"
+    - SCRIPT="python src/py/tests.py"
+    - SCRIPT="python src/html/tests.py"
 script:
   - "$SCRIPT"
