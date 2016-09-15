@@ -16,6 +16,7 @@ Demo: https://cdn.rawgit.com/ojii/gettext.js/master/demo/index.html
 
 Docs: http://gettextjs.readthedocs.org/
 
+
 Usage
 =====
 
@@ -25,32 +26,40 @@ Compiling
 .. code-block::
 
     Usage:
-        gettextjs [-i] [-v] [--js] <locale-path> [<out-dir>]
+        gettextjs [-i] [-v] [--json] <locale-path> [<out-dir>]
 
     Options:
         -h --help       Show this screen.
         --version       Show version.
         -i --indent     Indent JSON file.
         -v --verbose    Print stuff while doing work.
-        --js            Compile to JS instead of JSON.
+        --json          Compile to JSON instead of JS.
 
 
 Javascript
 ----------
 
-Async from JSON
-~~~~~~~~~~~~~~~
+Global
+~~~~~~
 
 .. code-block::
 
-    Gettext.load('/base/url/to/locale', 'en', 'messages').then(function(gettext){
-        var msgstr = gettext.gettext('msgid');
-    });
+    var gettext = require('gettextjs');
+    var catalog = require('locale/en/LC_MESSAGES/messages.mo.json');
 
-Sync from JS
-~~~~~~~~~~~~
+    gettext.set_catalog(catalog);
+
+    var translated = gettext.gettext('msgid');
+
+
+Local
+~~~~~
 
 .. code-block::
 
-    var gettext = new Gettext(EN_MESSAGES);
-    var msgstr = gettext.gettext('msgid');
+    var gettext = require('gettextjs');
+    var catalog = require('locale/en/LC_MESSAGES/messages.mo.json');
+
+    var g = new gettext.Gettext(catalog);
+
+    var translated = g.gettext('msgid');

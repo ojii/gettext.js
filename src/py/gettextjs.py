@@ -1,29 +1,18 @@
 import gettext
 import json
 import os
+from argparse import ArgumentParser
 
-import docopt
-import pkg_resources
+__version__ = '1.1'
 
-try:
-    VERSION = pkg_resources.get_distribution('gettextjs').version
-except pkg_resources.DistributionNotFound:
-    VERSION = 'dev'
 
-USAGE = """gettextjs
-
-Usage:
-    gettextjs [-i] [-v] [--js] <locale-path> [<out-dir>]
-
-Options:
-    -h --help       Show this screen.
-    --version       Show version.
-    -i --indent     Indent JSON file.
-    -v --verbose    Print stuff while doing work.
-    --js            Compile to JS instead of JSON.
-"""
 JSON_MODE = 0
 JS_MODE = 1
+
+
+TEMPLATE = '''(function (exports) {
+    exports.%(target)s = %(json)s;
+})(this);'''
 
 
 def compile_to_dict(locale_path: str, locale: str, domain: str) -> dict:
@@ -84,13 +73,11 @@ def compile_domain(locale_path: str, locale: str, domain: str, out_dir: str,
             '{domain}.mo.js'.format(domain=domain)
         )
         with open(out_file, 'w') as fobj:
-            fobj.write('var ')
-            fobj.write(locale.upper())
-            fobj.write('_')
-            fobj.write(domain.upper())
-            fobj.write(' = ')
-            json.dump(data, fobj, indent=indent, sort_keys=True)
-            fobj.write(';')
+            target = '%s_%s' % (locale.upper(), domain.upper())
+            fobj.write(TEMPLATE % {
+                'target': target,
+                'json': json.dumps(data, indent=indent, sort_keys=True)
+            })
     else:
         raise ValueError("Unkown mode: {mode}".format(mode=mode))
     if verbose:
@@ -120,14 +107,27 @@ def compile_locale_path(locale_path: str, out_dir: str, mode=JSON_MODE,
                         )
 
 
-def cli(argv=None):
-    args = docopt.docopt(USAGE, version=VERSION, argv=argv)
-    mode = 1 if args['--js'] else 0
-    out_dir = args.get('<out-dir>', None) or args['<locale-path>']
+def main(argv=None):
+    parser = ArgumentParser(prog='gettextjs')
+    parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('--version', action='version',
+                        version='%(prog)s ' + __version__)
+    parser.add_argument('-i', '--indent', action='store_const', const=2,
+                        default=0)
+    parser.add_argument('--json', action='store_const', const=JSON_MODE,
+                        default=JS_MODE, dest='mode')
+    parser.add_argument('locale_path')
+    parser.add_argument('out_dir', nargs='?', default=None)
+
+    args = parser.parse_args(argv)
+
     compile_locale_path(
-        args['<locale-path>'],
-        out_dir,
-        mode,
-        int(args['--indent']) * 2,
-        args['--verbose'],
+        args.locale_path,
+        args.out_dir or args.locale_path,
+        args.mode,
+        args.indent,
+        args.verbose,
     )
+
+if __name__ == '__main__':
+    main()

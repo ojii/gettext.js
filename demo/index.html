@@ -29,11 +29,10 @@
         <script>
             (function(){
                 var langs = {
-                    'en': new Gettext(EN_MESSAGES),
-                    'ja': new Gettext(JA_MESSAGES),
-                    'null': new Gettext()
+                    'en': EN_MESSAGES,
+                    'ja': JA_MESSAGES,
+                    'null': null
                 };
-                var lang = langs['null'];
                 var each = function(arr, func){
                     for (var i = 0, l = arr.length; i < l; i++){
                         func(arr[i]);
@@ -41,7 +40,7 @@
                 }
                 each(document.querySelectorAll('input[name=locale]'), function(ele){
                     ele.addEventListener('change', function(event){
-                        lang = langs[event.target.getAttribute('value')];
+                        gettext.set_catalog(langs[event.target.getAttribute('value')]);
                         refresh();
                     })
                 });
@@ -51,9 +50,9 @@
                             plural = ele.getAttribute('msgid-plural'),
                             count = ele.getAttribute('count');
                         if (!plural){
-                            ele.textContent = lang.gettext(singular);
+                            ele.textContent = gettext.gettext(singular);
                         } else {
-                            ele.textContent = lang.ngettext(singular, plural, parseInt(count, 10));
+                            ele.textContent = gettext.ngettext(singular, plural, parseInt(count, 10));
                         }
                     });
                 }

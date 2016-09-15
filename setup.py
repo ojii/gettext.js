@@ -1,12 +1,10 @@
 from setuptools import setup
 
+from gettextjs import __version__
 
 setup(
-    version='1.0',
+    version='1.1',
     name='gettextjs',
-    install_requires=[
-        'docopt',
-    ],
     package_dir={'': 'src/py'},
     py_modules=[
         'gettextjs',

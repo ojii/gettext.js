@@ -1,9 +1,8 @@
-/*jshint strict:true, latedef:true, noempty:true, noarg:true, unused:vars, evil:true, esnext:true, indent:4, eqeqeq:true, nocomma:true, quotmark:single, nonbsp:true, browser:true, bitwise:true, curly:true, undef:true, globalstrict:true, nonew:true, forin:true */
 'use strict';
 
-class Gettext {
+export class Gettext {
     constructor(catalog) {
-        if (catalog === undefined) {
+        if (!catalog) {
             catalog = {
                 'catalog': {},
                 'plural': null
@@ -46,19 +45,19 @@ class Gettext {
     }
 }
 
-Gettext.load = function (locale_path, locale, domain) {
-    if (locale_path.endsWith('/')) {
-        locale_path = locale_path.substr(0, locale_path.length - 1);
+let CATALOG = new Gettext();
+
+export function set_catalog(catalog) {
+    if (!(catalog instanceof Gettext)) {
+        catalog = new Gettext(catalog);
     }
-    return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
-        xhr.addEventListener('load', () => {
-            resolve(new Gettext(JSON.parse(xhr.response)));
-        });
-        xhr.addEventListener('error', () => {
-            reject(xhr.statusText);
-        });
-        xhr.open('GET', `${locale_path}/${locale}/LC_MESSAGES/${domain}.mo.json`);
-        xhr.send();
-    });
-};
+    CATALOG = catalog;
+}
+
+export function gettext(msgid) {
+    return CATALOG.gettext(msgid);
+}
+
+export function ngettext(singular, plural, count) {
+    return CATALOG.ngettext(singular, plural, count);
+}
