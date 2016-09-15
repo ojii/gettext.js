@@ -82,7 +82,7 @@ class IntegrationTests(unittest.TestCase):
             with open(ja_json_path) as fobj:
                 ja_data = json.load(fobj)
                 self.assertIn('plural', ja_data)
-                self.assertEqual(ja_data['plural'], None)
+                self.assertEqual(ja_data['plural'], '0')
                 self.assertIn('catalog', ja_data)
                 self.assertEqual(ja_data['catalog'], {
                     'simple-string': '簡単なストリング',
@@ -130,7 +130,7 @@ class IntegrationTests(unittest.TestCase):
             self.assertTrue(ja_content.endswith(suffix_ja))
             ja_data = json.loads(ja_content[len(prefix_ja):-len(suffix_ja)])
             self.assertIn('plural', ja_data)
-            self.assertEqual(ja_data['plural'], None)
+            self.assertEqual(ja_data['plural'], '0')
             self.assertIn('catalog', ja_data)
             self.assertEqual(ja_data['catalog'], {
                 'simple-string': '簡単なストリング',
