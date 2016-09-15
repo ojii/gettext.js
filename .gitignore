@@ -4,3 +4,7 @@ env
 *.egg-info
 docs/_build/
 node_modules/
+*.pyc
+dist/
+2env
+build
