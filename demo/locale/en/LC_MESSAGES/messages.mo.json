@@ -1,10 +1,10 @@
 {
-  "catalog": {
-    "simple-string": "A simple string",
-    "singular-string": [
-      "Singular form!",
-      "Plural form!"
-    ]
-  },
-  "plural": "(n != 1)"
+"catalog": {
+"simple-string": "A simple string",
+"singular-string": [
+"Singular form!",
+"Plural form!"
+]
+},
+"plural": "(n != 1)"
 }

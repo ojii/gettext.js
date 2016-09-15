@@ -28,6 +28,9 @@ def compile_to_dict(locale_path: str, locale: str, domain: str) -> dict:
             if el.strip().startswith('plural=')
         ][0].split('=', 1)[1]
 
+    if plural is None:
+        plural = "0"
+
     plural_dict = {}
     max_counts = {}
     catalog = {}

@@ -9,9 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "simple-string"
 msgstr "簡単なストリング"
 
 msgid "singular-string"
-msgstr "日本語には複数形がありません。"
+msgid_plural "plural-string"
+msgstr[0] "日本語には複数形がありません。"

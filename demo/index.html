@@ -4,7 +4,6 @@
         <meta charset="utf-8">
         <script src="locale/en/LC_MESSAGES/messages.mo.js"></script>
         <script src="locale/ja/LC_MESSAGES/messages.mo.js"></script>
-        <script src="es6-promise.min.js"></script>
         <script src="../dist/gettext.min.js"></script>
     </head>
     <body>
@@ -33,7 +32,7 @@
                     'ja': JA_MESSAGES,
                     'null': null
                 };
-                var each = function(arr, func){
+                function each(arr, func){
                     for (var i = 0, l = arr.length; i < l; i++){
                         func(arr[i]);
                     }

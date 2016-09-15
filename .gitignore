@@ -9,3 +9,4 @@ dist/
 2env
 build
 .env
+ghostdriver.log

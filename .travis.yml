@@ -2,10 +2,16 @@ sudo: false
 language: python
 python:
   - 3.5
-install:
-  - "pip install pyflakes"
-  - "npm install"
 before_install:
   - "nvm install stable"
-script: make
-cache: pip
+install:
+  - "pip install -r test_requirements.txt"
+  - "npm install"
+before_script:
+  - "gulp build"
+env:
+  - SCRIPT="gulp test"
+  - SCRIPT="python src/py/tests.py"
+  - SCRIPT="SELENIUM_WEBDRIVER=PhantomJS SELENIUM_DEBUG=1 python src/html/tests.py"
+script:
+  - "$SCRIPT"

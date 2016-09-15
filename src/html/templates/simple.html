@@ -1,0 +1,18 @@
+<script src="/dist/gettext.js"></script>
+<script src="/locale/en/LC_MESSAGES/messages.mo.js"></script>
+<script src="/locale/ja/LC_MESSAGES/messages.mo.js"></script>
+{% for locale in ['null', 'en', 'ja'] %}
+  <span id="{{ locale }}-simple"></span>
+  {% for count in [1, 2] %}
+    <span id="{{ locale }}-plural-{{ count }}"></span>
+  {% endfor %}
+{% endfor %}
+<script>
+  {% for locale, catalog in [('null', 'null'), ('en', 'EN_MESSAGES'), ('ja', 'JA_MESSAGES')] %}
+    var g = new gettext.Gettext({{ catalog }});
+    document.getElementById('{{ locale }}-simple').textContent = g.gettext('simple-string');
+    {% for count in [1, 2] %}
+      document.getElementById('{{ locale }}-plural-{{ count }}').textContent = g.ngettext('singular-string', 'plural-string', {{ count }});
+    {% endfor %}
+  {% endfor %}
+</script>
