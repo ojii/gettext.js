@@ -19,3 +19,5 @@ env:
     - SCRIPT="python src/html/tests.py"
 script:
   - "$SCRIPT"
+notifications:
+  email: false
