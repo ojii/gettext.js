@@ -15,4 +15,5 @@
       document.getElementById('{{ locale }}-plural-{{ count }}').textContent = g.ngettext('singular-string', 'plural-string', {{ count }});
     {% endfor %}
   {% endfor %}
+  window.GETTEXT_TESTS_FINISHED = true;
 </script>

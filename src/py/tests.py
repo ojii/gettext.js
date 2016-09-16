@@ -50,7 +50,7 @@ def tempdir():
         shutil.rmtree(dirname)
 
 
-class IntegrationTests(unittest.TestCase):
+class CLITests(unittest.TestCase):
     def test_compile_to_json(self):
         with tempdir() as workspace:
             gettextjs.main(['--json', TESTDATA_DIR, workspace])
@@ -86,7 +86,7 @@ class IntegrationTests(unittest.TestCase):
                 self.assertIn('catalog', ja_data)
                 self.assertEqual(ja_data['catalog'], {
                     'simple-string': '簡単なストリング',
-                    'singular-string': '日本語には複数形がありません。'
+                    'singular-string': ['日本語には複数形がありません。']
                 })
 
     def test_compile_to_js(self):
@@ -134,7 +134,7 @@ class IntegrationTests(unittest.TestCase):
             self.assertIn('catalog', ja_data)
             self.assertEqual(ja_data['catalog'], {
                 'simple-string': '簡単なストリング',
-                'singular-string': '日本語には複数形がありません。'
+                'singular-string': ['日本語には複数形がありません。']
             })
 
 

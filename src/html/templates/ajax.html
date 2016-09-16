@@ -1,0 +1,38 @@
+<script src="/dist/gettext.js"></script>
+{% for locale in ['null', 'en', 'ja'] %}
+  <span id="{{ locale }}-simple"></span>
+  {% for count in [1, 2] %}
+    <span id="{{ locale }}-plural-{{ count }}"></span>
+  {% endfor %}
+{% endfor %}
+<script>
+  function load(locale, cb) {
+    var url = '/locale/' + locale + '/LC_MESSAGES/messages.mo.json';
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+      var catalog;
+      if (xhr.status === 200) {
+        try {
+          catalog = JSON.parse(xhr.response);
+        } catch (err) {
+        }
+      }
+      cb(new gettext.Gettext(catalog));
+    };
+    xhr.onerror = function() {
+      cb(new gettext.Gettext());
+    };
+    xhr.open('GET', url, true);
+    xhr.send();
+  }
+  window.GETTEXT_TESTS_FINISHED = 0;
+  {% for locale in ['null', 'en', 'ja'] %}
+    load('{{ locale }}', function(g){
+      document.getElementById('{{ locale }}-simple').textContent = g.gettext('simple-string');
+      {% for count in [1, 2] %}
+        document.getElementById('{{ locale }}-plural-{{ count }}').textContent = g.ngettext('singular-string', 'plural-string', {{ count }});
+      {% endfor %}
+      window.GETTEXT_TESTS_FINISHED++
+    });
+    {% endfor %}
+</script>

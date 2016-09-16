@@ -15,7 +15,7 @@ from flask import Flask
 from flask import render_template
 from flask import send_from_directory
 from selenium import webdriver
-
+from selenium.webdriver.support.wait import WebDriverWait
 
 THIS_DIR = os.path.join(os.path.dirname(__file__))
 DIST_FOLDER = os.path.abspath(os.path.join(THIS_DIR, '..', '..', 'dist'))
@@ -144,6 +144,28 @@ class LiveServerTestCase(unittest.TestCase):
     def test_simple(self):
         with self.compiled(), self.get_driver() as driver:
             driver.get(self.build_url('/render/simple.html'))
+            WebDriverWait(driver, 10).until(lambda d: d.execute_script(
+                'return window.GETTEXT_TESTS_FINISHED;'
+            ))
+            for locale, g in LOCALES.items():
+                self.assertEqual(
+                    driver.find_element_by_id('%s-simple' % locale).text,
+                    g.gettext('simple-string'),
+                    locale
+                )
+                for n in [1, 2]:
+                    self.assertEqual(
+                        driver.find_element_by_id('%s-plural-%s' % (locale, n)).text,
+                        g.ngettext('singular-string', 'plural-string', n),
+                        (locale, n)
+                    )
+
+    def test_json(self):
+        with self.compiled(True), self.get_driver() as driver:
+            driver.get(self.build_url('/render/ajax.html'))
+            WebDriverWait(driver, 10).until(lambda d: d.execute_script(
+                'return window.GETTEXT_TESTS_FINISHED == 3;'
+            ))
             for locale, g in LOCALES.items():
                 self.assertEqual(
                     driver.find_element_by_id('%s-simple' % locale).text,
