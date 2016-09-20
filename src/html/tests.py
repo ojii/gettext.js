@@ -80,6 +80,28 @@ class Server(threading.Thread):
             self.httpd.shutdown()
 
 
+class JavascriptError(Exception):
+    def __init__(self, message, source, lineno, colno, error):
+        self.message = message
+        self.source = source
+        self.lineno = lineno
+        self.colno = colno
+        self.error = error
+        super(JavascriptError, self).__init__(message)
+
+
+def wait_for_results(driver, expected, timeout=10):
+    def until(driver):
+        result = driver.execute_script('return window.GETTEXT_TESTS_FINISHED;')
+        if result == -1:
+            raise JavascriptError(
+                **driver.execute_script('return window.GETTEXT_ERROR;')
+            )
+        else:
+            return result == expected
+    WebDriverWait(driver, timeout).until(until)
+
+
 class LiveServerTestCase(unittest.TestCase):
     timeout = 10
 
@@ -144,9 +166,7 @@ class LiveServerTestCase(unittest.TestCase):
     def test_simple(self):
         with self.compiled(), self.get_driver() as driver:
             driver.get(self.build_url('/render/simple.html'))
-            WebDriverWait(driver, 10).until(lambda d: d.execute_script(
-                'return window.GETTEXT_TESTS_FINISHED;'
-            ))
+            wait_for_results(driver, 3)
             for locale, g in LOCALES.items():
                 self.assertEqual(
                     driver.find_element_by_id('%s-simple' % locale).text,
@@ -163,9 +183,7 @@ class LiveServerTestCase(unittest.TestCase):
     def test_json(self):
         with self.compiled(True), self.get_driver() as driver:
             driver.get(self.build_url('/render/ajax.html'))
-            WebDriverWait(driver, 10).until(lambda d: d.execute_script(
-                'return window.GETTEXT_TESTS_FINISHED == 3;'
-            ))
+            wait_for_results(driver, 3)
             for locale, g in LOCALES.items():
                 self.assertEqual(
                     driver.find_element_by_id('%s-simple' % locale).text,

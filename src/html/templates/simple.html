@@ -8,12 +8,23 @@
   {% endfor %}
 {% endfor %}
 <script>
+  window.onerror = function(message, source, lineno, colno, error) {
+    window.GETTEXT_TESTS_FINISHED = -1;
+    window.GETTEXT_ERROR = {
+      message: message,
+      source: source,
+      lineno: lineno,
+      colno: colno,
+      error: error
+    };
+  };
+  window.GETTEXT_TESTS_FINISHED = 0;
   {% for locale, catalog in [('null', 'null'), ('en', 'EN_MESSAGES'), ('ja', 'JA_MESSAGES')] %}
     var g = new gettext.Gettext({{ catalog }});
     document.getElementById('{{ locale }}-simple').textContent = g.gettext('simple-string');
     {% for count in [1, 2] %}
       document.getElementById('{{ locale }}-plural-{{ count }}').textContent = g.ngettext('singular-string', 'plural-string', {{ count }});
     {% endfor %}
+    window.GETTEXT_TESTS_FINISHED++;
   {% endfor %}
-  window.GETTEXT_TESTS_FINISHED = true;
 </script>
