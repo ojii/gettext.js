@@ -1,5 +1,6 @@
-(function (exports) {
 'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -177,6 +178,4 @@ exports.Gettext = Gettext;
 exports.set_catalog = set_catalog;
 exports.gettext = gettext;
 exports.ngettext = ngettext;
-
-}((this.gettext = this.gettext || {})));
 //# sourceMappingURL=gettext.js.map

@@ -24,17 +24,17 @@ gulp.task('rollup', () => {
         cache: cache
     }).then(bundle => {
         return bundle.write({
-            dest: 'dist/gettext.js',
-            format: 'iife',
+            dest: 'dist/js/gettext.js',
+            format: 'cjs',
             sourceMap: true,
             moduleName: 'gettext',
         }).then(() => {
-            const result = uglify.minify('dist/gettext.js', {
-                inSourceMap: 'dist/gettext.js.map',
-                outSourceMap: 'dist/gettext.min.js.map',
+            const result = uglify.minify('dist/js/gettext.js', {
+                inSourceMap: 'dist/js/gettext.js.map',
+                outSourceMap: 'dist/js/gettext.min.js.map',
             });
-            fs.writeFileSync('dist/gettext.min.js', result.code);
-            fs.writeFileSync('dist/gettext.min.js.map', result.map);
+            fs.writeFileSync('dist/js/gettext.min.js', result.code);
+            fs.writeFileSync('dist/js/gettext.min.js.map', result.map);
         });
     });
 });
@@ -52,11 +52,11 @@ gulp.task('lint', () => {
 gulp.task('build', ['lint', 'rollup']);
 
 gulp.task('watch', () => {
-    return gulp.watch('./shobosso/static/sass/**/*.scss', ['styles']);
+    return gulp.watch('./src/js/**/*.js', ['build']);
 });
 
 gulp.task('test', () => {
-   return gulp.src('src/js/tests.js').pipe(tape());
+    return gulp.src('src/js/tests.js').pipe(tape());
 });
 
 gulp.task('default', ['build', 'watch']);
