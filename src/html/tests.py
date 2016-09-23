@@ -18,7 +18,7 @@ from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 
 THIS_DIR = os.path.join(os.path.dirname(__file__))
-DIST_FOLDER = os.path.abspath(os.path.join(THIS_DIR, '..', '..', 'dist'))
+DIST_FOLDER = os.path.abspath(os.path.join(THIS_DIR, '..', '..', 'dist', 'browser'))
 TEST_DATA_DIR = os.path.abspath(os.path.join(THIS_DIR, '..', 'test_data'))
 GETTEXTJS_PY = os.path.join(THIS_DIR, '..', 'py', 'gettextjs.py')
 

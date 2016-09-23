@@ -10,6 +10,28 @@ import uglify from 'uglify-js';
 
 let cache;
 
+function write_bundle(bundle, path, format) {
+    const paths = {
+        dest: `${path}/gettext.${format}.js`,
+        dest_map: `${path}/gettext.${format}.js.map`,
+        min: `${path}/gettext.${format}.min.js`,
+        min_map: `${path}/gettext.${format}.min.js.map`
+    };
+    return bundle.write({
+        dest: paths.dest,
+        format: format,
+        sourceMap: true,
+        moduleName: 'gettext'
+    }).then(() => {
+        const result = uglify.minify(paths.dest, {
+            inSourceMap: paths.dest_map,
+            outSourceMap: paths.min_map
+        });
+        fs.writeFileSync(paths.min, result.code);
+        fs.writeFileSync(paths.min_map, result.map);
+    });
+}
+
 gulp.task('rollup', () => {
     return rollup({
         entry: 'src/js/gettext.js',
@@ -23,18 +45,8 @@ gulp.task('rollup', () => {
         treeshake: true,
         cache: cache
     }).then(bundle => {
-        return bundle.write({
-            dest: 'dist/js/gettext.js',
-            format: 'cjs',
-            sourceMap: true,
-            moduleName: 'gettext',
-        }).then(() => {
-            const result = uglify.minify('dist/js/gettext.js', {
-                inSourceMap: 'dist/js/gettext.js.map',
-                outSourceMap: 'dist/js/gettext.min.js.map',
-            });
-            fs.writeFileSync('dist/js/gettext.min.js', result.code);
-            fs.writeFileSync('dist/js/gettext.min.js.map', result.map);
+        return write_bundle(bundle, 'dist/node/', 'cjs').then(() => {
+            return write_bundle(bundle, 'dist/browser/', 'iife');
         });
     });
 });
@@ -46,7 +58,7 @@ gulp.task('lint', () => {
         eslint.format()
     ).pipe(
         eslint.failAfterError()
-    )
+    );
 });
 
 gulp.task('build', ['lint', 'rollup']);
