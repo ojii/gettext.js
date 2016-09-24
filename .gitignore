@@ -7,3 +7,7 @@ node_modules/
 *.pyc
 .env
 ghostdriver.log
+.DS_Store
+.*.swap
+._*
+npm-debug.log

@@ -6,14 +6,15 @@
 Welcome to gettext.js's documentation!
 ======================================
 
-gettext.js is a tool consisting of two parts: A compiler that compiles .mo
-files into Javascript (either a Javascript file that can be included on your
-page or a JSON file which can be loaded asynchronously) written in Python 3.5
-and a Javascript runtime which exposes a GNU gettext like API to use those mo
-files in your browser.
 
-You don't need to use Python in your project, the only thing you need at
-runtime is Javascript.
+gettext.js provides a GNU gettext like interface for use in browsers. For better
+performance and compatibility, mo files are compiled into JSON or JavaScript files
+using a Python command line tool. These files can then be used in the browser to
+provide internationalization capabilities.
+
+While the tool to compile mo files to JavaScript or JSON is written in Python,
+the runtime has no Python dependencies. The JavaScript runtime can be used in
+either the browser or node.
 
 
 .. toctree::
@@ -22,6 +23,7 @@ runtime is Javascript.
     installation
     usage
     reference
+    changelog
 
 
 Indices and tables

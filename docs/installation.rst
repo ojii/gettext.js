@@ -8,12 +8,11 @@ Compiler
 --------
 
 * `Python 3.5`_ or higher
-* `docopt`_ (installed automatically)
 
 Javascript runtime
 ------------------
 
-* `Promises`_ either natively or via a polyfill.
+* No dependencies
   
 
 Installation
@@ -22,16 +21,17 @@ Installation
 Compiler
 --------
 
-``pip install gettextjs``
+``pip3 install gettextjs``
 
 Javascript runtime
 ------------------
 
-Grab ``dist/gettext.js`` or ``dist/gettext.min.js`` from the repo and include it
-in your page.
+You can install gettext.js via npm or download the file from the ``dist`` folder
+in the repository. The npm package includes the ``jsnext:main`` key, so the
+library can be included via `rollupjs`_ and the node-resolve plugin if you're
+building an ES6 project. For node project, there is also a common-js file. If
+you wish to use gettext.js in the browser, make sure to use the
+``gettext.iife.js`` file.
 
-.. _GNU gettext: https://www.gnu.org/software/gettext/
 .. _Python 3.5: https://www.python.org/downloads/release/python-350/
-.. _docopt: http://docopt.org/
-.. _Promises: http://caniuse.com/#feat=promises
-
+.. _rollupjs: http://rollupjs.org/
