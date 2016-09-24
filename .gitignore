@@ -11,3 +11,6 @@ ghostdriver.log
 .*.swap
 ._*
 npm-debug.log
+build/
+dist/*.whl
+dist/*.tar.gz
