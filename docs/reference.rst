@@ -2,7 +2,7 @@ Reference
 #########
 
 CLI
-===
+====
 
 .. program:: gettextjs
 
