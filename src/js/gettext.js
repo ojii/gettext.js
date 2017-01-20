@@ -13,7 +13,7 @@ export class Gettext {
         }
         this.catalog = catalog.catalog;
         if (catalog.plural) {
-            this.pluralidx = new Function('n', `return ${catalog.plural} * 1;`);
+            this.pluralidx = new Function('n', `return (${catalog.plural}) * 1;`);
         } else {
             this.pluralidx = (n) => {
                 return (n === 1) ? 0 : 1;
