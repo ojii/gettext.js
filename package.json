@@ -4,7 +4,7 @@
   "license": "BSD-3-Clause",
   "jsnext:main": "src/js/gettext.js",
   "main": "dist/node/gettext.js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "files": [
     "dist/node/",
     "dist/browser/",
