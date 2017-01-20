@@ -1,10 +1,19 @@
 Changelog
 #########
 
+1.2
+===
+
+Release date: January 20, 2017
+
+* Removed `eval` from Javascript runtime.
+* Use `yarn` for development Javascript dependencies.
+
+
 1.1
 ====
 
-Release date: In development
+Release date: September 24, 2016
 
 * Made the JavaScript runtime an NPM package.
 * Removed the `Gettext.load` API. If you want to load catalogs via AJAX, please
