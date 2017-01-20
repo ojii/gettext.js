@@ -4,6 +4,7 @@ import path from 'path';
 import test from 'tape';
 import tmp from 'tmp';
 import which from 'which';
+import eslint from 'tape-eslint';
 
 import * as gettext from './gettext';
 
@@ -26,6 +27,8 @@ function with_compiled(json, cb) {
         tempdir.removeCallback();
     }
 }
+
+test('eslint', eslint({files: ['gettext.js']}));
 
 test('test null catalog', t => {
     t.plan(3);
@@ -75,5 +78,19 @@ test('test ja js catalog', t => {
         t.equal(g.gettext('simple-string'), '簡単なストリング');
         t.equal(g.ngettext('singular-string', 'plural-string', 1), '日本語には複数形がありません。');
         t.equal(g.ngettext('singular-string', 'plural-string', 2), '日本語には複数形がありません。');
+    });
+});
+
+test('test set_catalog', t => {
+    t.plan(3);
+    with_compiled(false, workspace => {
+        const ja = require(path.join(workspace, 'ja', 'LC_MESSAGES', 'messages.mo.js')).JA_MESSAGES;
+        const en = require(path.join(workspace, 'en', 'LC_MESSAGES', 'messages.mo.js')).EN_MESSAGES;
+        t.equal(gettext.gettext('simple-string'), 'simple-string');
+        gettext.set_catalog(ja);
+        t.equal(gettext.gettext('simple-string'), '簡単なストリング');
+        gettext.set_catalog(en);
+        t.equal(gettext.gettext('simple-string'), 'A simple string');
+        gettext.set_catalog(null); // reset
     });
 });

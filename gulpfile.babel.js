@@ -71,4 +71,4 @@ gulp.task('test', () => {
     return gulp.src('src/js/tests.js').pipe(tape());
 });
 
-gulp.task('default', ['build', 'watch']);
+gulp.task('default', ['lint', 'build', 'watch']);
