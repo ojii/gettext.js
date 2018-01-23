@@ -1,62 +1,12 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Gettext.js Demo</title>
-        <meta charset="utf-8">
-        <script src="locale/en/LC_MESSAGES/messages.mo.js"></script>
-        <script src="locale/ja/LC_MESSAGES/messages.mo.js"></script>
-        <script src="../dist/gettext.min.js"></script>
-    </head>
-    <body>
-        <h1>Gettext.js Demo</h1>
-        <p>
-            <input id="en" type="radio" name="locale" value="en"><label for="en">English</label>
-            <input id="ja" type="radio" name="locale" value="ja"><label for="ja">日本語</label>
-            <input id="null" type="radio" name="locale" value="null" checked><label for="null">Reset</label>
-        </p>
-        <p>
-            <span msgid="simple-string"></span>
-        </p>
-        <p>
-            <span msgid="singular-string" msgid-plural="plural-string" count="1"></span>
-        </p>
-        <p>
-            <span msgid="singular-string" msgid-plural="plural-string" count="2"></span>
-        </p>
-        <p>
-            <a href="https://github.com/ojii/gettext.js/blob/master/demo/index.html">Source</a>
-        </p>
-        <script>
-            (function(){
-                var langs = {
-                    'en': EN_MESSAGES,
-                    'ja': JA_MESSAGES,
-                    'null': null
-                };
-                function each(arr, func){
-                    for (var i = 0, l = arr.length; i < l; i++){
-                        func(arr[i]);
-                    }
-                }
-                each(document.querySelectorAll('input[name=locale]'), function(ele){
-                    ele.addEventListener('change', function(event){
-                        gettext.set_catalog(langs[event.target.getAttribute('value')]);
-                        refresh();
-                    })
-                });
-                function refresh(){
-                    each(document.querySelectorAll('[msgid]'), function(ele){
-                        var singular = ele.getAttribute('msgid'),
-                            plural = ele.getAttribute('msgid-plural'),
-                            count = ele.getAttribute('count');
-                        if (!plural){
-                            ele.textContent = gettext.gettext(singular);
-                        } else {
-                            ele.textContent = gettext.ngettext(singular, plural, parseInt(count, 10));
-                        }
-                    });
-                }
-                refresh();
-            })();
-        </script>
-    </body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>gettext.js demo</title>
+  </head>
+  <body>
+  <section class="section" id="root"></section>
+  <script src="dist/bundle.js"></script>
+  </body>
 </html>

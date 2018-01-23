@@ -1,28 +1,3 @@
-sudo: false
-language: python
-cache:
-  - yarn
-  - pip
-python:
-  - 3.5
-  - 3.6
-before_install:
-  - "nvm install stable"
-  - npm install -g yarn
-install:
-  - "pip install -r test_requirements.txt"
-  - "yarn install"
-before_script:
-  - "gulp build"
-env:
-  global:
-    - SELENIUM_WEBDRIVER=PhantomJS
-    - SELENIUM_DEBUG=1
-  matrix:
-    - SCRIPT="gulp test"
-    - SCRIPT="python src/py/tests.py"
-    - SCRIPT="python src/html/tests.py"
-script:
-  - "$SCRIPT"
-notifications:
-  email: false
+language: node_js
+node_js:
+  - "node"
