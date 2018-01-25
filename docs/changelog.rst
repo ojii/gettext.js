@@ -1,6 +1,17 @@
 Changelog
 #########
 
+2.0
+===
+
+Release data: January 24, 2018
+
+* Re-wrote library to be pure JS (can now load MO files directly)
+* Removed `eval`/`new Function`.
+* Only distributed as un-processed library.
+* Added new `load` function.
+
+
 1.2
 ===
 
