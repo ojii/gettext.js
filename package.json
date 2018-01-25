@@ -10,7 +10,9 @@
   "description": "gettext in the browser",
   "author": "Jonas Obrist <ojiidotch@gmail.com>",
   "dependencies": {
+    "es6-promise": "^4.2.4",
     "immutable": "4.0.0-rc.9",
+    "isomorphic-fetch": "^2.2.1",
     "text-encoding": "^0.6.4"
   },
   "devDependencies": {
@@ -27,7 +29,6 @@
     "classnames": "^2.2.5",
     "css-loader": "^0.28.9",
     "jest": "^22.1.4",
-    "jest-fetch-mock": "^1.4.1",
     "raw-loader": "^0.5.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

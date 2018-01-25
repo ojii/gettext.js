@@ -1,13 +1,15 @@
 // @flow
-import parser, {makeCatalog} from './parser';
+import parse, {makeCatalog} from './parser';
 import type Catalog_ from './parser';
+import es6promise from 'es6-promise';
+es6promise.polyfill();
+import 'isomorphic-fetch';
+import {res2ab} from './utils';
+
 
 export type CatalogType = Catalog_;
 
-export const parse = parser;
-export const Catalog = makeCatalog;
-
-export default class Gettext {
+export class Gettext {
   constructor(catalog: ?CatalogType) {
     if (catalog) {
       this.catalog = catalog;
@@ -28,7 +30,7 @@ export default class Gettext {
 }
 
 export function load(url: str): Promise<Gettext> {
-  return fetch(url).then(resp => resp.arrayBuffer()).then(buf => parse(buf)).then(catalog => new Gettext(catalog));
+  return fetch(url).then(resp => res2ab(resp)).then(buf => parse(buf)).then(catalog => new Gettext(catalog));
 }
 
 let GLOBAL: Gettext = new Gettext();
@@ -48,3 +50,13 @@ export function gettext(msgid: string): string {
 export function ngettext(singular: string, plural: string, count: number): string {
   return GLOBAL.ngettext(singular, plural, count);
 }
+
+export default {
+  Gettext: Gettext,
+  Catalog: makeCatalog,
+  parse: parse,
+  load: load,
+  set_catalog: set_catalog,
+  gettext: gettext,
+  ngettext: ngettext
+};
