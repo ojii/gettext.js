@@ -1,6 +1,5 @@
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import http from 'http';
 import parse from '../src/parser';
 import {b2ab} from '../src/utils';
 
@@ -13,18 +12,6 @@ export function readArrayBuffer(name) {
 }
 
 export function readCatalog(name) {
-  return parse(readArrayBuffer(name));
-}
-
-export function withServer(cb) {
-  return new Promise(resolve => {
-    const server = http.createServer((req, res) => {
-      res.end(readFile(req.url));
-    });
-    server.listen(0, async () => {
-      await cb(path => `http://localhost:${server.address().port}${path}`);
-      server.close();
-      resolve();
-    })
-  });
+  const [headers, messages, pluralstring] = parse(readArrayBuffer(name));
+  return [headers, messages, new Function('n', `return (${pluralstring}) * 1;`)];
 }

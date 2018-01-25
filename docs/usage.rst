@@ -6,57 +6,65 @@ Workflow
 
 #. Create your po files using your current workflow.
 #. Create your mo files using your current workflow.
-#. Serve your mo files from your webserver.
+#. Choose one of the following:
+    #. Transpile your mo files to js files using `gettextjs`
+    #. Import your mo files in js and use the webpack loader.
 
 
-Loading MO files
-================
+Transpile using CLI
+===================
 
-The easiest way to load translations is using `load`::
+Transpile all your MO files to JS using `gettextjs <input> <output>`.
 
-    import {load} from 'gettextjs';
-
-    load('/url/to/mo/file.mo').then(locale => {
-        ...
-    });
+Note that the resulting code is ES7 code (including `import`) and needs to be
+transpiled before used.
 
 
-Using
-=====
+Webpack
+=======
 
-gettextjs exposed two methods on the :js:class:`Gettext` class:
-:js:func:`gettext` and :js:func:`ngettext`. They're equivalent to `gettext(3)`_
+Add the `gettextjs/dist/loader` loader to your webpack config for mo files:
+
+.. highlight:: javascript
+
+
+        {
+          test: /\.mo$/,
+          use: [
+            'babel-loader',
+            'gettextjs/dist/loader'
+          ]
+        }
+
+The `babel-loader` is needed because the gettextjs loader outputs ES7, but you can
+use another loader to do the JS->JS transpilation.
+
+
+Using transpiled files
+======================
+
+The transpiled files have a default export which is an instance of :js:class:`Translations`.
+They can either be used directly or you can call :js:func:`set_catalog` with the instance.
+
+.. highlight:: javascript
+
+
+    import locale from 'path/to/file.mo';
+    import gettext from 'gettextjs';
+
+    locale.gettext('foo');
+    locale.ngettext('foo', 'bar', n);
+
+    gettext.set_locale(locale);
+    gettext.gettext('foo');
+    gettext.ngettext('foo', 'bar', n);
+
+
+:js:func:`gettext` and :js:func:`ngettext` are equivalent to `gettext(3)`_
 and `ngettext(3)`_. :js:func:`gettext` takes a single ``msgid`` and returns the
 translation for it, if it finds one, or the ``msgid``. :js:func:`ngettext` is
 used for translations which may have plurals.
 
-.. highlight:: javascript
-
-Here's an example usage::
-
-    import {load} from 'gettextjs';
-    load('/language.mo').then(gettext => {
-        gettext.gettext("Hello world!");
-        gettext.gettext("I know %(number)s language", "I know %(number)s languages", 1);
-        gettext.gettext("I know %(number)s language", "I know %(number)s languages", 2);
-    });
-
-
-String interpolation
-====================
-
-gettext.js does not provide string interpolation. Use libraries like
-`sprintf.js`_ to do this. When doing string interpolation, make sure you call
-the approprate gettext.js function first. You should **always use named
-arguments** when internationalizing strings, as different languages may have
-different word orders.
-
-The example above would become::
-
-    sprintf(gettext.gettext("I know %(number)s language", "I know %(number)s languages", 2), {'number': 2});
-
-
 
 .. _gettext(3): http://linux.die.net/man/3/gettext
 .. _ngettext(3): http://linux.die.net/man/3/ngettext
-.. _sprintf.js: https://www.npmjs.com/package/sprintf-js

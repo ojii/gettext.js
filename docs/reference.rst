@@ -1,19 +1,13 @@
 Reference
 #########
 
-.. js:function:: load(url)
+.. js:class:: Translations(headers, messages, plural)
 
-    :param string url: URL from which to load an MO file.
-    :returns: An Promise of :js:class:`Gettext` instance.
+    :param Immutable.Map<string, string> headers: MO headers.
+    :param Immutable.Map<string, Immutable.List<string>> messages: The translations.
+    :param (number) => number plural: Function to resolve plural forms.
 
-.. js:function:: parse(buf)
-
-    :param ArrayBuffer buf: An ArrayBuffer holding an MO file.
-    :returns: An instance of :js:class:`Catalog`.
-
-.. js:class:: Gettext(catalog)
-
-    :param Catalog catalog: Catalog object. Can be created using :js:func:`parse`.
+    Usually this class should not be created manually.
 
     .. js:method:: gettext(msgid)
 
@@ -32,14 +26,14 @@ Reference
 
     :param Gettext catalog:
 
-    Set a catalog as the currently active, global translation catalog.
+    Set a translation as the currently active, global translations.
 
 .. js:function:: gettext(msgid)
 
     :param string msgid: Message ID to look up.
     :returns: Translated string (or input string if not found).
 
-    Uses the catalog set by :js:func:`set_catalog` to translate a message ID.
+    Uses the translations set by :js:func:`set_catalog` to translate a message ID.
 
 .. js:function:: ngettext(msgid, msgid_plural, count)
 
@@ -48,9 +42,4 @@ Reference
     :param number count: Used to detect whether plural or singular form should be used.
     :returns: Translated string (or one of the input strings if not found).
 
-    Uses the catalog set by :js:func:`set_catalog` to translate a message ID.
-
-.. js::class:: Catalog
-
-    Holds the parsed information from an MO file. Use :js:func:`parse` to create
-    it.
+    Uses the translations set by :js:func:`set_catalog` to translate a message ID.

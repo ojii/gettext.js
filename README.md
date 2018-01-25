@@ -5,31 +5,23 @@
 gettext.js
 ==========
 
-gettext.js provides a GNU gettext like interface for use in browsers.
-
-gettext.js is distributed as a library only for easy integration into your build
-toolchain.
+gettext.js provides a GNU gettext like interface for use in browsers, a MO file to
+JS transpiler and a webpack loader for MO files.
 
 Full Docs: <http://gettextjs.readthedocs.org/>
 
 Usage
 -----
 
-### load
+### Webpack
 
 ```js
+import English from 'locales/en/LC_MESSAGES/messages.mo';
 
-import {load} from 'gettextjs';
-
-load('/url/to/file.mo').then(locale => locale.gettext('hello world'));
+English.gettext('hello world');
+English.ngettext('bug', 'bugs', 4);
 ```
 
-### parse
+### Compile
 
-```js
-import Gettext, {parse} from 'gettextjs';
-
-const gettext = new Gettext(parse(ArrayBufferOfMOFile));
-gettext.gettext('hello world');
-gettext.ngettext('singular', 'plural', num);
-```
+`gettextjs <input> <output>` turns the input MO file int a JS file.

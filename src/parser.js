@@ -1,32 +1,20 @@
 // @flow
 import Immutable from 'immutable';
-import type { RecordFactory, RecordOf } from 'immutable';
 import {TextDecoder} from 'text-encoding';
-import compile from './pluralforms';
-import type PluralForm from './pluralforms';
 import {enumerate, range} from './utils';
+import type {Headers, Messages} from './runtime';
 
 
 const LE_MAGIC = 0x950412de;
 const BE_MAGIC = 0xde120495;
 const VERSIONS = Immutable.Set([0, 1]);
-const defaultPlural = n => n !== 1 ? 1 : 0;
-
-type CatalogProps = {
-  plural: PluralForm,
-  messages: Immutable.Map<string, Immutable.List<string>>,
-  headers: Immutable.Map<string, string>
-};
-export const makeCatalog: RecordFactory<CatalogProps> = Immutable.Record({
-  plural: defaultPlural,
-  messages: Immutable.Map(),
-  headers: Immutable.Map()
-});
-export type Catalog = RecordOf<CatalogProps>;
+const defaultPlural = 'n !== 1 ? 1 : 0';
 
 const UTF8Decoder = new TextDecoder('utf-8');
 
-export default function parse(buf: ArrayBuffer): Catalog {
+export type PluralString = string;
+
+export default function parse(buf: ArrayBuffer): [Headers, Messages, PluralString] {
   const view = new DataView(buf);
   const magic = view.getUint32(0, true);
   let unpack: (ArrayBuffer) => Iterable<number>;
@@ -80,7 +68,7 @@ export default function parse(buf: ArrayBuffer): Catalog {
         if (k === 'content-type' && v !== null) {
           decoder = new TextDecoder(v.split('charset=1')[1]);
         } else if (k === 'plural-forms' && v !== null) {
-          plural = compile(v.split(';')[1].split('plural=')[1]);
+          plural = v.split(';')[1].split('plural=')[1];
         }
       }
     }
@@ -93,7 +81,7 @@ export default function parse(buf: ArrayBuffer): Catalog {
     masteridx += 8;
     transidx += 8;
   }
-  return makeCatalog({plural: plural, messages: messages, headers: headers});
+  return [headers, messages, plural];
 }
 
 function readByteString(buf: ArrayBuffer, start: number, end: number): Uint8Array {

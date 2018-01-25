@@ -1,11 +1,16 @@
 const path = require('path');
 
+const p = (...parts) => path.resolve(__dirname, ...parts);
+
 module.exports = {
-  entry: ['@babel/polyfill', './demo/src/index.js'],
+  entry: [p('src', 'runtime.js')],
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'demo/dist'),
+    filename: 'runtime.js',
+    path: p('dist'),
+    library: 'gettextjs',
+    libraryTarget: 'commonjs2'
   },
+  target: 'web',
   module: {
     rules: [
       {
@@ -14,11 +19,7 @@ module.exports = {
         use: {
           loader: 'babel-loader'
         }
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
       }
     ]
-  },
+  }
 };

@@ -7,8 +7,8 @@ Welcome to gettext.js's documentation!
 ======================================
 
 
-gettext.js provides a GNU gettext like interface for use in browsers, with support
-to load mo files directly.
+gettext.js provides a GNU gettext like interface for use in browsers, a MO file to
+JS transpiler and a webpack loader for MO files.
 
 
 

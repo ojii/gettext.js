@@ -2,17 +2,17 @@
   "name": "gettextjs",
   "repository": "https://github.com/ojii/gettext.js",
   "license": "BSD-3-Clause",
-  "main": "src/gettext.js",
+  "main": "dist/runtime.js",
+  "bin": "dist/bin.js",
   "version": "2.0.0",
   "files": [
-    "src/"
+    "src/",
+    "dist/"
   ],
   "description": "gettext in the browser",
   "author": "Jonas Obrist <ojiidotch@gmail.com>",
   "dependencies": {
-    "es6-promise": "^4.2.4",
-    "immutable": "4.0.0-rc.9",
-    "isomorphic-fetch": "^2.2.1",
+    "immutable": "^3.8.2",
     "text-encoding": "^0.6.4"
   },
   "devDependencies": {
@@ -33,10 +33,15 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "style-loader": "^0.19.1",
+    "tmp": "^0.0.33",
     "webpack": "^3.10.0"
   },
   "scripts": {
     "test": "jest",
-    "build-demo": "webpack"
+    "build-bin": "webpack --config webpack.bin.js --progress",
+    "build-demo": "webpack --config webpack.demo.js --progress",
+    "build-loader": "webpack --config webpack.loader.js --progress",
+    "build-runtime": "webpack --config webpack.runtime.js --progress",
+    "build": "yarn build-bin && yarn build-loader && yarn build-runtime && yarn build-demo"
   }
 }

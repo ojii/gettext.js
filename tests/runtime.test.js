@@ -1,9 +1,9 @@
-import gettext from '../src/gettext';
+import gettext from '../src/runtime';
 import {readCatalog, withServer} from './utils';
 
-const en = new gettext.Gettext(readCatalog('en.mo'));
-const ja = new gettext.Gettext(readCatalog('ja.mo'));
-const nc = new gettext.Gettext();
+const en = new gettext.Translations(...readCatalog('en.mo'));
+const ja = new gettext.Translations(...readCatalog('ja.mo'));
+const nc = new gettext.Translations();
 
 
 describe('global api', () => {
@@ -55,14 +55,5 @@ describe('object api', () => {
     expect(ja.ngettext('singular-string', 'plural-string', 0)).toBe('日本語には複数形がありません。');
     expect(ja.ngettext('singular-string', 'plural-string', 1)).toBe('日本語には複数形がありません。');
     expect(ja.ngettext('singular-string', 'plural-string', 2)).toBe('日本語には複数形がありません。');
-  });
-});
-
-describe('load', () => {
-  test('load-en', async () => {
-    await withServer(async getURL => {
-      const loaded = await gettext.load(getURL('/en.mo'));
-      expect(loaded.messages).toEqual(en.messages);
-    });
   });
 });
