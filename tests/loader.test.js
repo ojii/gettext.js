@@ -12,7 +12,7 @@ function compiler(fixture, ...loaders) {
     entry: p('data', fixture),
     output: {
       path: p(),
-      filename: 'bundle.js',
+      filename: 'bundle.js'
     },
     module: {
       rules: [{
@@ -67,11 +67,12 @@ test('Compiled file actually works', async () => {
   const output = stats.toJson().modules[0].source;
   return new Promise((resolve, reject) => {
     try {
-      tmp.file((err, path) => {
+      tmp.dir((err, path) => {
         if (err) throw err;
-        fs.writeFileSync(path, output);
-        console.log(output);
-        const locale = require(path);
+        const module = `${path}/bundle.js`;
+        fs.symlinkSync(p('..', 'node_modules'), `${path}/node_modules`);
+        fs.writeFileSync(module, output);
+        const locale = require(module).default;
         expect(locale.gettext('simple-string')).toEqual('A simple string');
         resolve();
       });
