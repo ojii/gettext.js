@@ -26,15 +26,15 @@ class Translations {
 }
 let GLOBAL: Translations = new Translations();
 
-function set_catalog(locale: ?Translations) {
+export function set_catalog(locale: ?Translations) {
   GLOBAL = locale || new Translations();
 }
 
-function gettext(msgid: string): string {
+export function gettext(msgid: string): string {
   return GLOBAL.gettext(msgid);
 }
 
-function ngettext(singular: string, plural: string, count: number): string {
+export function ngettext(singular: string, plural: string, count: number): string {
   return GLOBAL.ngettext(singular, plural, count);
 }
 
