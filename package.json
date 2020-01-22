@@ -4,7 +4,7 @@
   "license": "BSD-3-Clause",
   "main": "dist/runtime.js",
   "bin": "dist/bin.js",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "files": [
     "src/",
     "dist/"
