@@ -38,6 +38,7 @@ function compiler(fixture, ...loaders) {
 test('Compiles en.mo file to js module', async () => {
   const stats = await compiler('en.mo');
   const output = stats.toJson().modules[0].source;
+  expect(stats.toJson().errors).toBe([]);
   expect(output).toBe(`import gettext from 'gettextjs';
 import Immutable from 'immutable';
 
@@ -51,6 +52,7 @@ export default new gettext.Translations(headers, messages, plural);`);
 test('Compiles ja.mo file to js module', async () => {
   const stats = await compiler('ja.mo');
   const output = stats.toJson().modules[0].source;
+  expect(stats.toJson().errors).toBe([]);
   expect(output).toBe(`import gettext from 'gettextjs';
 import Immutable from 'immutable';
 
@@ -65,6 +67,7 @@ export default new gettext.Translations(headers, messages, plural);`);
 test('Compiled file actually works', async () => {
   const stats = await compiler('en.mo', 'babel-loader');
   const output = stats.toJson().modules[0].source;
+  expect(stats.toJson().errors).toBe([]);
   return new Promise((resolve, reject) => {
     try {
       tmp.dir((err, path) => {
