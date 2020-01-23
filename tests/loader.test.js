@@ -4,9 +4,11 @@ import webpack from 'webpack';
 import MemoryFS from 'memory-fs';
 import tmp from 'tmp';
 
+const TIMEOUT = 99 * 1000;
+
 const p = (...parts) => path.resolve(__dirname, ...parts);
 
-function compiler(fixture, ...loaders) {
+function compiler(fixture) {
   const compiler = webpack({
     context: __dirname,
     entry: p('data', fixture),
@@ -15,12 +17,31 @@ function compiler(fixture, ...loaders) {
       filename: 'bundle.js'
     },
     module: {
-      rules: [{
-        test: /\.mo/,
-        use: [...loaders, {
-          loader: p('..', 'src', 'loader.js')
-        }]
-      }]
+      rules: [
+        {
+          test: /\.mo/,
+          use: [{
+            loader: p('..', 'src', 'loader.js')
+          }
+          ]
+        },
+        {
+          test: /\.js$/,
+          use: [{
+            loader: "babel-loader",
+            options: {
+              presets: [
+                "@babel/preset-flow",
+                "@babel/preset-react"
+              ],
+              plugins: [
+                "@babel/plugin-proposal-class-properties",
+                "@babel/plugin-transform-runtime"
+              ]
+            }
+          }]
+        }
+      ]
     },
     resolve: {
       alias: {
@@ -52,7 +73,7 @@ const messages = Immutable.fromJS({"":["Project-Id-Version: gettextjs\\nPO-Revis
 const plural = n => ((n != 1)) * 1;
 
 export default new gettext.Translations(headers, messages, plural);`);
-});
+}, TIMEOUT);
 
 test('Compiles ja.mo file to js module', async () => {
   const stats = await compiler('ja.mo');
@@ -66,11 +87,11 @@ const messages = Immutable.fromJS({"":["Project-Id-Version: gettextjs\\nPO-Revis
 const plural = n => (0) * 1;
 
 export default new gettext.Translations(headers, messages, plural);`);
-});
+}, TIMEOUT);
 
 
 test('Compiled file actually works', async () => {
-  const stats = await compiler('en.mo', 'babel-loader');
+  const stats = await compiler('en.mo');
   const output = stats.toJson().modules[0].source;
   expect(stats.toJson().errors).toBe([]);
   return new Promise((resolve, reject) => {
@@ -88,4 +109,4 @@ test('Compiled file actually works', async () => {
       reject(err);
     }
   })
-});
+}, TIMEOUT);
