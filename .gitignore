@@ -5,4 +5,3 @@ docs/_build/
 node_modules/
 coverage/
 env/
-yarn.lock

@@ -8233,6 +8233,9 @@ module.exports = warning;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.set_catalog = set_catalog;
+exports.gettext = gettext;
+exports.ngettext = ngettext;
 exports.default = void 0;
 
 var _immutable = _interopRequireDefault(__webpack_require__(67));
