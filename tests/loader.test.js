@@ -31,6 +31,7 @@ function compiler(fixture) {
             loader: "babel-loader",
             options: {
               presets: [
+                ["@babel/preset-env", {targets: {browsers: ["ie >= 11", "last 2 versions"], node: "current"}}],
                 "@babel/preset-flow",
                 "@babel/preset-react"
               ],
