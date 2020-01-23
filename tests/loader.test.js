@@ -21,6 +21,11 @@ function compiler(fixture, ...loaders) {
           loader: p('..', 'src', 'loader.js')
         }]
       }]
+    },
+    resolve: {
+      alias: {
+        gettextjs: p("..", "src", "runtime.js")
+      }
     }
   });
 
