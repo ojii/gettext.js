@@ -22,6 +22,17 @@ English.gettext('hello world');
 English.ngettext('bug', 'bugs', 4);
 ```
 
+### Runtime
+
+```js
+import {gettext as _, ngettext, set_catalog} from "gettextjs";
+
+set_catalog(...);
+
+_("hello world");
+ngettext("bug", "bugs", 4);
+```
+
 ### Compile
 
 `gettextjs <input> <output>` turns the input MO file int a JS file.
